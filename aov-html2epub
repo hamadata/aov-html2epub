@@ -46,7 +46,7 @@ if [ ! -z "${COVER}" ] ; then
 
     O="titlepage.html"
     > ${O}
-    echo "<html><body><img src='${COVER}'/></body></html>" >> ${O}
+    echo "<html><body><img src='${COVER}' align='center'/></body></html>" >> ${O}
 fi
 
 rm -f ${EPUB}
@@ -114,6 +114,20 @@ echo '  </head>' >> ${O}
 echo '  <docTitle>' >> ${O}
 echo "    <text>$TITLE</text>" >> ${O}
 echo '  </docTitle>' >> ${O}
+echo '  <navMap>' >> ${O}
+
+ID=1
+
+for f in ${HTML} ; do
+    echo "    <navPoint id='${ID}' playOrder='${ID}'>" >> ${O}
+    echo "      <navLabel><text>${ID}</text></navlabel>" >> ${O}
+    echo "      <content src='${f}'/>" >> ${O}
+    echo "    </navPoint>" >> ${O}
+
+    ID=$(($ID + 1))
+done
+
+echo '  </navMap>' >> ${O}
 echo '</ncx>' >> ${O}
 
 FILES="META-INF content.opf mimetype toc.ncx"
