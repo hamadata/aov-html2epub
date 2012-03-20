@@ -6,18 +6,36 @@
 #
 # Public domain
 
-HTML="$1"
-EPUB="$2"
-TITLE="$3"
-AUTHOR="$4"
+EPUB="$1"
+shift
 
-if [ -z "$HTML" -o -z "$EPUB" ] ; then
-    echo "Usage: $0 {HTML file} {epub file} [\"title\"] [\"author\"]"
+TITLE=""
+AUTHOR=""
+COVER=""
+HTML=""
+
+if [ -z "$EPUB" ] ; then
+    echo "Usage: $0 {epub file} [-t \"title\"] [-a \"author\"] [-c \"cover.jpg\"] {HTML files...}"
     exit 1
 fi
 
-if [ ! -f "$HTML" ] ; then
-    echo "$0: Error: $HTML not found"
+# parse arguments
+while [ $# -ne 0 ] ; do
+
+    case $1 in
+    -t)         TITLE="$2"                      ; shift ;;
+    -a)         AUTHOR="$2"                     ; shift ;;
+    -c)         COVER="$2"                      ; shift ;;
+    *.html)     HTML="${HTML} $1"                       ;;
+    *)          echo "$0: invalid argument $1" ; exit 1 ;;
+    esac
+
+    shift
+
+done
+
+if [ -z "$HTML" ] ; then
+    echo "$0: No HTML files; aborting"
     exit 2
 fi
 
@@ -51,7 +69,11 @@ echo "    <dc:author>$AUTHOR</dc:author>" >> ${O}
 echo '    <dc:identifier id="uuid_id" opf:scheme="uuid">c5be00f9-932e-4903-8cd9-b4b5939411a6</dc:identifier>' >> ${O}
 echo '  </metadata>' >> ${O}
 echo '  <manifest>' >> ${O}
-echo "    <item href='${HTML}' id='content' media-type='application/html'/>" >> ${O}
+
+for f in ${HTML} ; do
+    echo "    <item href='${f}' id='content' media-type='application/html'/>" >> ${O}
+done
+
 echo '    <item href="toc.ncx" media-type="application/x-dtbncx+xml" id="ncx"/>' >> ${O}
 echo '  </manifest>' >> ${O}
 echo '  <spine toc="ncx">' >> ${O}
@@ -81,6 +103,6 @@ FILES="META-INF content.opf mimetype toc.ncx"
 
 zip ${EPUB} -r ${FILES} ${HTML}
 
-rm -rf ${FILES}
+#rm -rf ${FILES}
 
 exit 0
