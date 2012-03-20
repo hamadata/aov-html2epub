@@ -16,7 +16,13 @@ HTML=""
 LANG="en"
 
 if [ -z "$EPUB" ] ; then
-    echo "Usage: $0 {epub file} [-t \"title\"] [-a \"author\"] [-c \"cover.jpg\"] [-l \"lang\"] {HTML files...}"
+    echo "Usage: $0 {epub file} [options] {HTML file(s)}"
+    echo
+    echo "Options:"
+    echo "-t \"title\"            Book title"
+    echo "-a \"author\"           Book author"
+    echo "-c cover_image.jpg    Cover image (jpg format)"
+    echo "-l lang               Language (en, es, fr...)"
     exit 1
 fi
 
