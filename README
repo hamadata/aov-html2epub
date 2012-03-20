@@ -3,7 +3,8 @@ aov-html2epub README
 
 This is a minimal HTML file to EPUB format converter. After, as usual,
 being bored + frustrated by the cumbersome available tools to do this
-apparently trivial operation, this is my approach.
+apparently trivial operation, this is my approach. It's just a shell
+script. The only dependency is the `zip' program.
 
 If you are searching for a pure text to HTML converter, try
 http://triptico.com/software/grutatxt.html (Grutatxt).
