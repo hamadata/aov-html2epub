@@ -13,9 +13,10 @@ TITLE=""
 AUTHOR=""
 COVER=""
 HTML=""
+LANG="en"
 
 if [ -z "$EPUB" ] ; then
-    echo "Usage: $0 {epub file} [-t \"title\"] [-a \"author\"] [-c \"cover.jpg\"] {HTML files...}"
+    echo "Usage: $0 {epub file} [-t \"title\"] [-a \"author\"] [-c \"cover.jpg\"] [-l \"lang\"] {HTML files...}"
     exit 1
 fi
 
@@ -26,6 +27,7 @@ while [ $# -ne 0 ] ; do
     -t)         TITLE="$2"                      ; shift ;;
     -a)         AUTHOR="$2"                     ; shift ;;
     -c)         COVER="$2"                      ; shift ;;
+    -l)         LANG="$2"                       ; shift ;;
     *.html)     HTML="${HTML} $1"                       ;;
     *)          echo "$0: invalid argument $1" ; exit 1 ;;
     esac
@@ -37,6 +39,14 @@ done
 if [ -z "$HTML" ] ; then
     echo "$0: No HTML files; aborting"
     exit 2
+fi
+
+if [ ! -z "${COVER}" ] ; then
+    HTML="titlepage.html $HTML"
+
+    O="titlepage.html"
+    > ${O}
+    echo "<html><body><img src='${COVER}'/></body></html>" >> ${O}
 fi
 
 rm -f ${EPUB}
@@ -62,22 +72,29 @@ O=content.opf
 echo '<?xml version="1.0" encoding="utf-8"?>' >> ${O}
 echo '<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">' >> ${O}
 echo '<metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/">' >> ${O}
-echo '<dc:language>es</dc:language>' >> ${O}
-echo '<dc:creator>aov-epub</dc:creator>' >> ${O}
-echo "    <dc:title>$TITLE</dc:title>" >> ${O}
-echo "    <dc:author>$AUTHOR</dc:author>" >> ${O}
+echo "    <dc:language>${LANG}</dc:language>" >> ${O}
+echo "    <dc:creator>${AUTHOR}</dc:creator>" >> ${O}
+echo "    <dc:title>${TITLE}</dc:title>" >> ${O}
 echo '    <dc:identifier id="uuid_id" opf:scheme="uuid">c5be00f9-932e-4903-8cd9-b4b5939411a6</dc:identifier>' >> ${O}
 echo '  </metadata>' >> ${O}
 echo '  <manifest>' >> ${O}
 
+if [ ! -z "$COVER" ] ; then
+    echo "    <item href='${COVER}' id='cover' media-type='image/jpeg'/>" >> ${O}
+fi
+
 for f in ${HTML} ; do
-    echo "    <item href='${f}' id='content' media-type='application/html'/>" >> ${O}
+    echo "    <item href='${f}' id='${f}' media-type='application/html'/>" >> ${O}
 done
 
 echo '    <item href="toc.ncx" media-type="application/x-dtbncx+xml" id="ncx"/>' >> ${O}
 echo '  </manifest>' >> ${O}
 echo '  <spine toc="ncx">' >> ${O}
-echo '    <itemref idref="content"/>' >> ${O}
+
+for f in ${HTML} ; do
+    echo "    <itemref idref='${f}'/>" >> ${O}
+done
+
 echo '  </spine>' >> ${O}
 echo '  <guide/>' >> ${O}
 echo '</package>' >> ${O}
@@ -101,7 +118,7 @@ echo '</ncx>' >> ${O}
 
 FILES="META-INF content.opf mimetype toc.ncx"
 
-zip ${EPUB} -r ${FILES} ${HTML}
+zip ${EPUB} -r ${FILES} ${COVER} ${HTML}
 
 #rm -rf ${FILES}
 
