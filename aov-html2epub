@@ -135,7 +135,7 @@ echo "    <text>$TITLE</text>" >> ${O}
 echo '  </docTitle>' >> ${O}
 echo '  <navMap>' >> ${O}
 
-ID=0
+ID=1
 
 for f in ${HTML} ; do
     echo "    <navPoint id='${f}' playOrder='${ID}'>" >> ${O}
