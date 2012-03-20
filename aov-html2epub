@@ -47,18 +47,19 @@ if [ -z "$HTML" ] ; then
     exit 2
 fi
 
+O="titlepage.html"
+> ${O}
+
 if [ ! -z "${COVER}" ] ; then
+    WITH_TITLEPAGE=1
     HTML="titlepage.html $HTML"
 
-    O="titlepage.html"
-    > ${O}
     echo "<html><body><img src='${COVER}' align='center'/></body></html>" >> ${O}
 else
     if [ ! -z "$TITLE" ] ; then
+        WITH_TITLEPAGE=1
         HTML="titlepage.html $HTML"
 
-        O="titlepage.html"
-        > ${O}
         echo "<html><body><h1>$TITLE</h1><h2>$AUTHOR</h2></body></html>" >> ${O}
     fi
 fi
@@ -90,6 +91,7 @@ echo "    <dc:language>${LANG}</dc:language>" >> ${O}
 echo "    <dc:creator>${AUTHOR}</dc:creator>" >> ${O}
 echo "    <dc:title>${TITLE}</dc:title>" >> ${O}
 echo '    <dc:identifier id="uuid_id" opf:scheme="uuid">c5be00f9-932e-4903-8cd9-b4b5939411a6</dc:identifier>' >> ${O}
+echo "    <dc:date>2012-03-20</dc:date>" >> ${O}
 echo '  </metadata>' >> ${O}
 echo '  <manifest>' >> ${O}
 
@@ -110,7 +112,13 @@ for f in ${HTML} ; do
 done
 
 echo '  </spine>' >> ${O}
-echo '  <guide/>' >> ${O}
+echo '  <guide>' >> ${O}
+
+if [ "$WITH_TITLEPAGE" = "1" ] ; then
+    echo '    <reference href="titlepage.html" type="cover" title="Cover"/>' >> ${O}
+fi
+
+echo '  </guide>' >> ${O}
 echo '</package>' >> ${O}
 
 O=toc.ncx
