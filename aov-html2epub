@@ -53,6 +53,14 @@ if [ ! -z "${COVER}" ] ; then
     O="titlepage.html"
     > ${O}
     echo "<html><body><img src='${COVER}' align='center'/></body></html>" >> ${O}
+else
+    if [ ! -z "$TITLE" ] ; then
+        HTML="titlepage.html $HTML"
+
+        O="titlepage.html"
+        > ${O}
+        echo "<html><body><h1>$TITLE</h1><h2>$AUTHOR</h2></body></html>" >> ${O}
+    fi
 fi
 
 rm -f ${EPUB}
