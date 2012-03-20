@@ -120,7 +120,7 @@ ID=1
 
 for f in ${HTML} ; do
     echo "    <navPoint id='${f}' playOrder='${ID}'>" >> ${O}
-    echo "      <navLabel><text>${ID}</text></navlabel>" >> ${O}
+    echo "      <navLabel><text>${ID}</text></navLabel>" >> ${O}
     echo "      <content src='${f}'/>" >> ${O}
     echo "    </navPoint>" >> ${O}
 
