@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Converts an HTML file to EPUB format
+#
+# Angel Ortega <angel@triptico.com>
+#
+# Public domain
+
+HTML="$1"
+EPUB="$2"
+TITLE="$3"
+AUTHOR="$4"
+
+if [ -z "$HTML" -o -z "$EPUB" ] ; then
+    echo "Usage: $0 {HTML file} {epub file} [\"title\"] [\"author\"]"
+    exit 1
+fi
+
+if [ ! -f "$HTML" ] ; then
+    echo "$0: Error: $HTML not found"
+    exit 2
+fi
+
+rm -f ${EPUB}
+
+##################################################
+
+mkdir -p META-INF
+O="META-INF/container.xml"
+
+> ${O}
+echo '<?xml version="1.0"?>' >> ${O}
+echo '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">' >> ${O}
+echo '   <rootfiles>' >> ${O}
+echo '      <rootfile full-path="content.opf" media-type="application/oebps-package+xml"/>' >> ${O}
+echo '   </rootfiles>' >> ${O}
+echo '</container>' >> ${O}
+
+echo -n "application/epub+zip" > mimetype
+
+O=content.opf
+>${O}
+
+echo '<?xml version="1.0" encoding="utf-8"?>' >> ${O}
+echo '<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">' >> ${O}
+echo '<metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/">' >> ${O}
+echo '<dc:language>es</dc:language>' >> ${O}
+echo '<dc:creator>aov-epub</dc:creator>' >> ${O}
+echo "    <dc:title>$TITLE</dc:title>" >> ${O}
+echo "    <dc:author>$AUTHOR</dc:author>" >> ${O}
+echo '    <dc:identifier id="uuid_id" opf:scheme="uuid">c5be00f9-932e-4903-8cd9-b4b5939411a6</dc:identifier>' >> ${O}
+echo '  </metadata>' >> ${O}
+echo '  <manifest>' >> ${O}
+echo "    <item href='${HTML}' id='content' media-type='application/html'/>" >> ${O}
+echo '    <item href="toc.ncx" media-type="application/x-dtbncx+xml" id="ncx"/>' >> ${O}
+echo '  </manifest>' >> ${O}
+echo '  <spine toc="ncx">' >> ${O}
+echo '    <itemref idref="content"/>' >> ${O}
+echo '  </spine>' >> ${O}
+echo '  <guide/>' >> ${O}
+echo '</package>' >> ${O}
+
+O=toc.ncx
+> ${O}
+
+echo '<?xml version="1.0" encoding="utf-8"?>' >> ${O}
+echo '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="es-ES">' >> ${O}
+echo '  <head>' >> ${O}
+echo '    <meta content="c5be00f9-932e-4903-8cd9-b4b5939411a6" name="dtb:uid"/>' >> ${O}
+echo '    <meta content="2" name="dtb:depth"/>' >> ${O}
+echo '    <meta content="aov-epub" name="dtb:generator"/>' >> ${O}
+echo '    <meta content="0" name="dtb:totalPageCount"/>' >> ${O}
+echo '    <meta content="0" name="dtb:maxPageNumber"/>' >> ${O}
+echo '  </head>' >> ${O}
+echo '  <docTitle>' >> ${O}
+echo "    <text>$TITLE</text>" >> ${O}
+echo '  </docTitle>' >> ${O}
+echo '</ncx>' >> ${O}
+
+FILES="META-INF content.opf mimetype toc.ncx"
+
+zip ${EPUB} -r ${FILES} ${HTML}
+
+rm -rf ${FILES}
+
+exit 0
