@@ -151,8 +151,8 @@ echo '</ncx>' >> ${O}
 
 FILES="META-INF titlepage.xhtml content.opf toc.ncx"
 
-zip ${EPUB} -Z store mimetype
-zip ${EPUB} -r ${FILES} ${COVER} ${HTML}
+zip ${EPUB} -X -Z store mimetype
+zip ${EPUB} -X -r ${FILES} ${COVER} ${HTML}
 
 rm -rf mimetype ${FILES}
 
