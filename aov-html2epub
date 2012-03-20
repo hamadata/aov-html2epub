@@ -103,7 +103,7 @@ O=toc.ncx
 > ${O}
 
 echo '<?xml version="1.0" encoding="utf-8"?>' >> ${O}
-echo '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="es-ES">' >> ${O}
+echo "<ncx xmlns='http://www.daisy.org/z3986/2005/ncx/' version='2005-1' xml:lang='${LANG}'>" >> ${O}
 echo '  <head>' >> ${O}
 echo '    <meta content="c5be00f9-932e-4903-8cd9-b4b5939411a6" name="dtb:uid"/>' >> ${O}
 echo '    <meta content="2" name="dtb:depth"/>' >> ${O}
@@ -120,6 +120,6 @@ FILES="META-INF content.opf mimetype toc.ncx"
 
 zip ${EPUB} -r ${FILES} ${COVER} ${HTML}
 
-#rm -rf ${FILES}
+rm -rf ${FILES}
 
 exit 0
