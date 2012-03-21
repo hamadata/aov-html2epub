@@ -21,7 +21,7 @@ if [ -z "$EPUB" ] ; then
     echo "Options:"
     echo "-t \"title\"            Book title"
     echo "-a \"author\"           Book author"
-    echo "-c cover_image.jpg    Cover image (jpg format)"
+    echo "-c cover_image.png    Cover image (PNG format)"
     echo "-l lang               Language (en, es, fr...)"
     exit 1
 fi
@@ -93,7 +93,7 @@ echo '  </metadata>' >> ${O}
 echo '  <manifest>' >> ${O}
 
 if [ ! -z "$COVER" ] ; then
-    echo "    <item href='${COVER}' id='cover' media-type='image/jpeg'/>" >> ${O}
+    echo "    <item href='${COVER}' id='cover' media-type='image/png'/>" >> ${O}
 fi
 
 echo "    <item href='titlepage.xhtml' id='titlepage.xhtml' media-type='application/xhtml+xml'/>" >> ${O}
