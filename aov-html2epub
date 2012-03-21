@@ -55,7 +55,7 @@ O="titlepage.xhtml"
 > ${O}
 echo "<?xml version='1.0' encoding='utf-8'?>" >> ${O}
 echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">' >> ${O}
-echo "<head><title>${TITLE}</title></head><body>" >> ${O}
+echo "<head><title>${TITLE} - ${AUTHOR}</title></head><body>" >> ${O}
 
 if [ ! -z "${COVER}" ] ; then
     echo "<img src='${COVER}'/>" >> ${O}
@@ -85,8 +85,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' >> ${O}
 echo '<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">' >> ${O}
 echo '<metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/">' >> ${O}
 echo "    <dc:language>${LANG}</dc:language>" >> ${O}
-echo "    <dc:creator>${AUTHOR}</dc:creator>" >> ${O}
-echo "    <dc:title>${TITLE}</dc:title>" >> ${O}
+echo "    <dc:title>${TITLE} - ${AUTHOR}</dc:title>" >> ${O}
 echo '    <dc:identifier id="uuid_id" opf:scheme="uuid">c5be00f9-932e-4903-8cd9-b4b5939411a6</dc:identifier>' >> ${O}
 echo "    <dc:date>2012-03-20</dc:date>" >> ${O}
 echo '  </metadata>' >> ${O}
@@ -131,7 +130,7 @@ echo '    <meta content="0" name="dtb:totalPageCount"/>' >> ${O}
 echo '    <meta content="0" name="dtb:maxPageNumber"/>' >> ${O}
 echo '  </head>' >> ${O}
 echo '  <docTitle>' >> ${O}
-echo "    <text>$TITLE</text>" >> ${O}
+echo "    <text>$TITLE - $AUTHOR</text>" >> ${O}
 echo '  </docTitle>' >> ${O}
 echo '  <navMap>' >> ${O}
 
