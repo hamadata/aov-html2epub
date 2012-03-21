@@ -6,9 +6,12 @@ being bored + frustrated by the cumbersome available tools to do this
 apparently trivial operation, this is my approach. It's just a shell
 script. The only dependency is the `zip' program.
 
-If you are searching for a pure text to HTML converter, try
-http://triptico.com/software/grutatxt.html (Grutatxt).
+The EPUB specification is fucking braindead. Do not be confused with
+all that MIME and content types everywhere: the only supported format
+is fucking XHTML (no support for pure text/html). It's up to you to
+have a sufficiently XMLized HTML for your EPUBs to not choke and crash
+most eBook readers.
 
-Released under the public domain. Modify as you want.
+Released under the public domain. Use as you want, specially for evil.
 
 Angel Ortega <angel@triptico.com>
